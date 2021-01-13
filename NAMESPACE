@@ -3,6 +3,7 @@
 export(ag_abund)
 export(ag_trend)
 export(fit_ssl_nimble)
+export(prep_for_nimble)
 export(summary_ag)
 import(dplyr)
 import(mgcv)
