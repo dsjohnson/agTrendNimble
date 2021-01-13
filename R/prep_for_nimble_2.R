@@ -11,6 +11,7 @@
 #' @param debug Logical. Should debug mode be entered. Probably just for Devin to use. 
 #' @author Devin S. Johnson
 #' @import dplyr tidyr mgcv
+#' @export
 #' 
 prep_for_nimble <- function(x, timeframe, model.cuts=c(5,10), max.factor=3, debug=FALSE){
   

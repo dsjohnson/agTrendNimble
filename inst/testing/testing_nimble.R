@@ -1,6 +1,7 @@
 library(tidyverse)
-devtools::load_all(".")
-library(nimble)
+# devtools::load_all(".")
+library(agTrendNimble)
+# library(nimble)
 library(ggplot2)
 
 # source('~/research/projects/r_packages/agTrendNimble/R/fit_ssl_nimble.R')
