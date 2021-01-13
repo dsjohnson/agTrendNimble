@@ -1,4 +1,4 @@
-Package: agTrend.nimble
+Package: agTrendNimble
 Title: Interpolate Survey Counts For Site-Level Aggregating
 Version: 0.0.0.9000
 Date: January 10, 2021
