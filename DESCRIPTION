@@ -1,0 +1,22 @@
+Package: agTrend.nimble
+Title: Interpolate Survey Counts For Site-Level Aggregating
+Version: 0.0.0.9000
+Date: January 10, 2021
+Authors@R: 
+    person(given = "Devin",
+           family = "Johnson",
+           role = c("aut", "cre"),
+           email = "devin.johnson@noaa.gov")
+Description: Uses time time trends and low-rank Gaussian processes to interpolate abundance counts for aggregated analysis.
+License: CC0
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    nimble,
+    dplyr,
+    purrr,
+    tidyr,
+    coda,
+    mgcv
