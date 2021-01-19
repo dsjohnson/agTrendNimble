@@ -81,7 +81,7 @@ ag_trend <- function(x, timeframe, ci.prob=0.95){
   max_yr <- max(yrs)
   zeros_pred <- map_lgl(x$N_predict, ~{any(.x==0)})
   zeros_real <- map_lgl(x$N_real, ~{any(.x==0)})  
-  warning(paste0("There are abundnces of 0 animals for: ", nms[zeros_pred | zeros_real], ". Adding '0.5' to allow calculation."))
+  if(any(zeros_pred) | any(zeros_real)) warning(paste0("There are abundnce values of 0 for: ", nms[zeros_pred | zeros_real], ". Adding '0.5' to allow calculation."))
   ln_Np <- map2(x$N_predict, zeros_pred, ~{log(as.matrix(.x + 0.5*.y))})
   ln_Nr <- map2(x$N_real, zeros_real, ~{log(as.matrix(.x + 0.5*.y))})
   out <- x[,1]

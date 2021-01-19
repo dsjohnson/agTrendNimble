@@ -24,7 +24,7 @@ fit_ssl_nimble(
 
 \item{debug}{Jump into the fucntion for debugging.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments}
 }
 \description{
 Fit agTrend SSL model using MCMC with NIMBLE

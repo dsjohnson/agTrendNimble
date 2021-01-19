@@ -97,7 +97,7 @@ prep_for_nimble <- function(x, timeframe, model.cuts=c(5,10), max.factor=3, debu
     beta1 = ifelse(site_data$model=='const',0,NA), # parameter vector (Ns)
     sig_beta1 = ifelse(site_data$model=='const', 1, NA),
     K=K, #known matrix (Nt x Na)
-    p = ifelse(site_data$model=='const', 0, 0), # parameter vector (Ns)
+    p = ifelse(site_data$model=='const', 0, NA), # parameter vector (Ns)
     alpha=sapply(
       site_data$model, 
       function(x){if(x=='tprs') return(rep(NA,ncol(K))) else return(rep(0,ncol(K)))}
@@ -133,7 +133,7 @@ prep_for_nimble <- function(x, timeframe, model.cuts=c(5,10), max.factor=3, debu
     ),
     tau = ifelse(site_data$model=='tprs', 1, NA),
     phi = ifelse(phi>0, phi, 0.001),
-    p = ifelse(site_data$model=='const', NA, NA),
+    p = ifelse(site_data$model=='const', NA, 0),
     gamma = -0.03903366
   )
   

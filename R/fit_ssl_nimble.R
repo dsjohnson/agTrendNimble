@@ -5,7 +5,7 @@
 #' @param nburnin Number of burnin iterations. These will be discarded from \code{niter} before returning results.
 #' @param thin Thinning of the MCMC sample for storage. Total number of retuned samples is \code{(niter-nburnin)/thin}.
 #' @param debug Jump into the fucntion for debugging.
-#' @param ... Additional arguments.
+#' @param ... Additional arguments
 #' @import nimble
 #' @export
 #' 
@@ -43,7 +43,7 @@ fit_ssl_nimble <- function(x, niter = 110000, nburnin=10000, thin=10, debug=FALS
   #   gamma ~ dnorm(0.03903366,sd=0.01068773)
   #   
   # })
-  agt_ssl_code <- nimbleCode({
+  agt_ssl_code <- nimble::nimbleCode({
     
     for(j in 1:Nsurv){
       y[j] ~ dinterval(z[j], c[j])
@@ -74,7 +74,7 @@ fit_ssl_nimble <- function(x, niter = 110000, nburnin=10000, thin=10, debug=FALS
   
   message("building model...")
   suppressMessages(
-    agt_ssl_model <- nimbleModel(
+    agt_ssl_model <- nimble::nimbleModel(
       code = agt_ssl_code,
       constants = x$constants,
       data = x$data,
@@ -84,11 +84,11 @@ fit_ssl_nimble <- function(x, niter = 110000, nburnin=10000, thin=10, debug=FALS
   message("building MCMC sampler...")
   agt_ssl_mcmc <- buildMCMC(agt_ssl_model, monitors=x$monitors, print=FALSE) 
   message("compling code...this will take a couple of minutes...")
-  suppressMessages(agt_ssl_model_c <- compileNimble(agt_ssl_model))
-  suppressMessages(agt_ssl_mcmc_c <- compileNimble(agt_ssl_mcmc))
+  suppressMessages(agt_ssl_model_c <- nimble::compileNimble(agt_ssl_model))
+  suppressMessages(agt_ssl_mcmc_c <- nimble::compileNimble(agt_ssl_mcmc))
   message("running MCMC...this will be a while...go get some coffee...")
   if(debug==2) browser()
-  suppressMessages(smp <- runMCMC(agt_ssl_mcmc_c, 
+  suppressMessages(smp <- nimble::runMCMC(agt_ssl_mcmc_c, 
                                   niter = niter, nchains = 1, nburnin=nburnin, thin=thin,
                                   samplesAsCodaMCMC = TRUE))
   message("sampler done...just doing some post-processing...")

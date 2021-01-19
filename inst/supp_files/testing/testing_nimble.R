@@ -1,36 +1,27 @@
 library(tidyverse)
-# devtools::load_all(".")
-library(agTrendNimble)
-# library(nimble)
+devtools::load_all(".")
+library(nimble)
+# library(agTrendNimble)
 library(ggplot2)
 
-# source('~/research/projects/r_packages/agTrendNimble/R/fit_ssl_nimble.R')
-# source('~/research/projects/r_packages/agTrendNimble/R/prep_for_nimble_2.R')
-# source('~/research/projects/r_packages/agTrendNimble/R/util_funcs.R')
-# source('~/research/projects/r_packages/agTrendNimble/R/agg_funcs.R')
-
 load("~/research/projects/sea_lion_analysis/SSL survey power analysis_2019/ssl_counts_v8.RData")
-# source("helper_gam.R")
 
-np <- edpsnp %>% #filter(REGION=="SE AK") %>% 
+edpsnp <- edpsnp %>% #filter(REGION=="SE AK") %>% 
   arrange(SITE, year) %>% left_join(edps_photo,  by = c("SITE", "REGION", "year")) 
 
-# %>% 
-# np <-   filter(np, SITE %in% c("BODEGA ROCK"))
-
-x <- prep_for_nimble(np, timeframe=c(1979,2019), debug=F)
+nbl_list <- prep_for_nimble(edpsnp, timeframe=c(1979,2019), debug=F)
 
 tictoc::tic()
-smp <- fit_ssl_nimble(x, niter = 70000, nburnin=20000, thin=10, debug=F)
+smp <- fit_ssl_nimble(nbl_list, niter = 70000, nburnin=20000, thin=10, debug=F)
 tictoc::toc()
 
 
 
 
 ### Plot all the sites
-gr <- rep(1:ceiling(nrow(x$site_data)/4), each=4)[1:nrow(x$site_data)]
+gr <- rep(1:ceiling(nrow(nbl_list$site_data)/4), each=4)[1:nrow(nbl_list$site_data)]
 for(i in 1:max(gr)){
-  s <- x$site_data$site[gr==i]
+  s <- nbl_list$site_data$site[gr==i]
   idx <- (smp$summary$site%in%s) #& (x$fitting_data$year>=1989)
   df <- smp$summary[idx,]
   p <- ggplot(data=df) + 
@@ -46,13 +37,14 @@ for(i in 1:max(gr)){
 
 
 
-
+########################
 ### Some aggregations
+########################
+
 N_region <- ag_abund(smp$abund, "region")
-region_trends <- ag_trend(N_region, c(1999, 2019))
+region_trends <- ag_trend(N_region, c(1989, 2019))
+N_region_summary <- summary_ag(N_region)
 
-
-N_region_summary <- summary_agg(N_region)
 ggplot(data=N_region_summary %>% filter(year>=1989)) +
   geom_path(aes(x=year, y=Estimate), color='darkred') +
   geom_ribbon(aes(x=year, ymin=CI_predict_lower, ymax=CI_predict_upper), fill='darkred', alpha=0.2) +
@@ -63,8 +55,9 @@ ggplot(data=N_region_summary %>% filter(year>=1989)) +
 
 smp$abund$total <- 'total'
 N_total <- ag_abund(smp$abund, "total")
-N_total_summary <- summary_agg(N_total)
-total_trend <- ag_trend(N_total, c(1999,2019))
+N_total_summary <- summary_ag(N_total)
+total_trend <- ag_trend(N_total, c(1989,2019))
+
 ggplot(data=N_total_summary) +
   geom_path(aes(x=year, y=Estimate), color='darkred') +
   geom_ribbon(aes(x=year, ymin=CI_predict_lower, ymax=CI_predict_upper), fill='darkred', alpha=0.2) +
